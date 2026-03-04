@@ -219,3 +219,4 @@ web/node_modules/
 web/.next/
 web/out/
 agentWithGo/bin/*
+.envrc
