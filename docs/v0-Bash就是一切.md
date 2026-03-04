@@ -6,7 +6,7 @@
 
 v0 通过反向思考来回答——剥离一切，直到只剩下核心。
 
-## 架构总览
+## 架构总览go mod init github.com/your-username/learn-claude-code-with-golang
 
 ```sh
 User -> [LLM] -> tool_use? --yes--> [Bash] -> append result -> [LLM]
@@ -110,12 +110,12 @@ if __name__ == "__main__":
 核心模式从未改变：
 
 ```python
-while True:
+**while True:
     response = model(messages, tools)
     if response.stop_reason != "tool_use":
         return response.text
     results = execute(response.tool_calls)
-    messages.append(results)
+    messages.append(results)**
 ```
 
 其他一切——待办、子代理、权限——都是围绕这个循环的精化。
