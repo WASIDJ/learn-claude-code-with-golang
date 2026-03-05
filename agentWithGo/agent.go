@@ -43,8 +43,7 @@ func AgentLoop(messages []anthropic.MessageParam) ([]anthropic.MessageParam, str
 		for _, tc := range toolCalls {
 			inputJSON := tc.JSON.Input.Raw()
 			inputMap := jsonToMap(inputJSON)
-
-			output += fmt.Sprintf("\n> %s: %v\n", tc.Name, inputMap)
+			output += fmt.Sprintf("\n😮‍💨> %s: %v\n", tc.Name, inputMap)
 
 			result := ExecuteTool(tc.Name, inputJSON)
 			preview := result
