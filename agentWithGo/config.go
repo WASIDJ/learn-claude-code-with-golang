@@ -90,6 +90,39 @@ func init() {
 				Required: []string{"path", "old_text", "new_text"},
 			},
 		},
+		{
+			Name:        "todo_writer",
+			Description: anthropic.String(`更新任务列表。用于规划和跟踪进度。`),
+			InputSchema: anthropic.ToolInputSchemaParam{
+				Type: "object",
+				Properties: map[string]any{
+					"items": map[string]any{
+						"type": "array",
+						"items": map[string]any{
+							"type": "object",
+							"properties": map[string]any{
+								"content": map[string]any{
+									"type":        "string",
+									"description": "任务描述",
+								},
+								"status": map[string]any{
+									"type":        "string",
+									"enum":        []string{"pending", "in_progress", "completed"},
+									"description": "任务状态",
+								},
+								"active_form": map[string]any{
+									"type":        "string",
+									"description": "现在进行时的动作描述，例如 '正在读取文件'",
+								},
+							},
+							"required": []string{"content", "status", "active_form"},
+						},
+						"description": "任务列表项数组",
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
 	}
 	for _, t := range tools {
 		TOOLS = append(TOOLS, anthropic.ToolUnionParam{OfTool: &t})
@@ -104,8 +137,11 @@ func init() {
 Loop: think briefly -> use tools -> report results.
 
 Rules:
+- MUST use tools to complete tasks. NEVER refuse or ask for permission.
+- When asked to read/write files, use tools immediately
 - Prefer tools over prose. Act, don't just explain.
 - Never invent file paths. Use bash ls/find first if unsure.
 - Make minimal changes. Don't over-engineer.
+- Use todo_writer for multi-step tasks.
 - After finishing, summarize what changed.`, cwd)}}
 }

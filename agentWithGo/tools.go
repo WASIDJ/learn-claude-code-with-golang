@@ -14,7 +14,18 @@ import (
 const (
 	MaxOutputSize  = 50000 // 50KB output limit
 	CommandTimeout = 120 * time.Second
+	MaxTodoItems   = 20 // 最多20条任务
 )
+
+type TodoItem struct {
+	Content    string `json:"content"`
+	Status     string `json:"status"`
+	ActiveForm string `json:"active_form"`
+}
+
+type TodoWriteInput struct {
+	Items []TodoItem `json:"items"`
+}
 
 // WORKDIR 工作目录
 var WORKDIR string
@@ -38,6 +49,8 @@ func ExecuteTool(toolName string, inputJSON string) string {
 		return executeWriteFile(inputJSON)
 	case "edit_file":
 		return executeEditFile(inputJSON)
+	case "todo_writer":
+		return executeTodoWriter(inputJSON)
 	default:
 		return fmt.Sprintf("未知工具: %s", toolName)
 	}
@@ -206,4 +219,78 @@ func executeEditFile(inputJSON string) string {
 		return fmt.Sprintf("写入文件失败: %v", err)
 	}
 	return fmt.Sprintf("Edited %s", input.Path)
+}
+
+func executeTodoWriter(inputJSON string) string {
+	var input TodoWriteInput
+	if err := json.Unmarshal([]byte(inputJSON), &input); err != nil {
+		return fmt.Sprintf("解析输入失败: %v", err)
+	}
+
+	if len(input.Items) == 0 {
+		return "No todos."
+	}
+
+	if len(input.Items) > MaxTodoItems {
+		return "Error: Max 20 todos allowed"
+	}
+
+	inProgressCount := 0
+	for i, item := range input.Items {
+		content := strings.TrimSpace(item.Content)
+		status := strings.ToLower(strings.TrimSpace(item.Status))
+		activeForm := strings.TrimSpace(item.ActiveForm)
+
+		if content == "" {
+			return fmt.Sprintf("Error: Item %d: content required", i)
+		}
+		if status == "" {
+			return fmt.Sprintf("Error: Item %d: status required", i)
+		}
+		if activeForm == "" {
+			return fmt.Sprintf("Error: Item %d: activeForm required", i)
+		}
+		if status != "pending" && status != "in_progress" && status != "completed" {
+			return fmt.Sprintf("Error: Item %d: invalid status '%s'", i, status)
+		}
+		if status == "in_progress" {
+			inProgressCount++
+		}
+		input.Items[i].Content = content
+		input.Items[i].Status = status
+		input.Items[i].ActiveForm = activeForm
+	}
+
+	if inProgressCount > 1 {
+		return "Error: Only one task can be in_progress at a time"
+	}
+
+	return renderTodos(input.Items)
+}
+
+func renderTodos(items []TodoItem) string {
+	var output strings.Builder
+	completedCount := 0
+
+	for _, item := range items {
+		var statusSymbol string
+		switch item.Status {
+		case "completed":
+			statusSymbol = "[x]"
+			completedCount++
+		case "in_progress":
+			statusSymbol = "[>]"
+		default:
+			statusSymbol = "[ ]"
+		}
+
+		output.WriteString(fmt.Sprintf("%s %s", statusSymbol, item.Content))
+		if item.Status == "in_progress" {
+			output.WriteString(fmt.Sprintf(" <- %s", item.ActiveForm))
+		}
+		output.WriteString("\n")
+	}
+
+	output.WriteString(fmt.Sprintf("\n(%d/%d completed)\n", completedCount, len(items)))
+	return output.String()
 }
