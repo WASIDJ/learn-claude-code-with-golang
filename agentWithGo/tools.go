@@ -51,9 +51,24 @@ func ExecuteTool(toolName string, inputJSON string) string {
 		return executeEditFile(inputJSON)
 	case "todo_writer":
 		return executeTodoWriter(inputJSON)
+	case "Task":
+		return executeTask(inputJSON)
 	default:
 		return fmt.Sprintf("未知工具: %s", toolName)
 	}
+}
+
+func executeTask(inputJSON string) string {
+	var input TaskInput
+	if err := json.Unmarshal([]byte(inputJSON), &input); err != nil {
+		return fmt.Sprintf("解析输入失败: %v", err)
+	}
+
+	result, err := RunTask(input)
+	if err != nil {
+		return fmt.Sprintf("子代理执行失败: %v", err)
+	}
+	return result
 }
 
 // safePath 确保路径在 WORKDIR 内，防止逃逸

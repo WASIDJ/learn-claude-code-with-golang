@@ -7,20 +7,65 @@ import (
 	"github.com/anthropics/anthropic-sdk-go"
 )
 
-// SYSTEM 系统提示词
 var SYSTEM []anthropic.TextBlockParam
 
-// TOOLS 可用工具列表
 var TOOLS []anthropic.ToolUnionParam
+
+type AgentTypeConfig struct {
+	Description  string
+	Tools        []string
+	SystemPrompt string
+}
+
+var AGENT_TYPES = map[string]AgentTypeConfig{
+	"explore": {
+		Description:  "Fast read-only agent for exploring codebases. Use for: understanding project structure, finding files, searching patterns.",
+		Tools:        []string{"bash", "read_file"},
+		SystemPrompt: "You are an exploration agent. Your ONLY job is to gather information. You cannot modify files. Focus on reading and searching efficiently. Report findings concisely.",
+	},
+	"code": {
+		Description:  "Full-featured coding agent. Use for: implementing features, refactoring, writing tests, editing files.",
+		Tools:        []string{"bash", "read_file", "write_file", "edit_file"},
+		SystemPrompt: "You are a coding agent. Implement changes precisely as requested. Make minimal, focused edits. Test your changes when possible.",
+	},
+	"plan": {
+		Description:  "Planning agent for analyzing tasks. Use for: breaking down complex tasks, creating implementation plans.",
+		Tools:        []string{"bash", "read_file"},
+		SystemPrompt: "You are a planning agent. Analyze the codebase and create detailed implementation plans. Do not make changes, only plan and report.",
+	},
+}
+
+func getToolsForAgent(agentType string, allTools []anthropic.ToolUnionParam) []anthropic.ToolUnionParam {
+	config, exists := AGENT_TYPES[agentType]
+	if !exists {
+		return allTools
+	}
+
+	if len(config.Tools) == 1 && config.Tools[0] == "*" {
+		return allTools
+	}
+
+	toolSet := make(map[string]bool)
+	for _, t := range config.Tools {
+		toolSet[t] = true
+	}
+
+	var filtered []anthropic.ToolUnionParam
+	for _, tool := range allTools {
+		if tool.OfTool != nil {
+			if toolSet[tool.OfTool.Name] {
+				filtered = append(filtered, tool)
+			}
+		}
+	}
+	return filtered
+}
 
 func init() {
 	tools := []anthropic.ToolParam{
 		{
-			Name: "bash",
-			Description: anthropic.String(`执行 shell 命令。模式：
-- 读取: cat/grep/find/ls
-- 写入: echo '...' > file
-- 子代理: go run v0_bash_agent_mini.go 'task description`),
+			Name:        "bash",
+			Description: anthropic.String(`执行 shell 命令。模式：读取(cat/grep/find/ls)、写入(echo '...' > file)、子代理(go run v0_bash_agent_mini.go 'task description')`),
 			InputSchema: anthropic.ToolInputSchemaParam{
 				Type: "object",
 				Properties: map[string]any{
@@ -123,7 +168,31 @@ func init() {
 				Required: []string{"items"},
 			},
 		},
+		{
+			Name:        "Task",
+			Description: anthropic.String(`创建子智能体来完成子任务。子代理类型: explore(只读探索)、code(完整编码)、plan(规划分析)`),
+			InputSchema: anthropic.ToolInputSchemaParam{
+				Type: "object",
+				Properties: map[string]any{
+					"description": map[string]any{
+						"type":        "string",
+						"description": "短描述（3-5词），用于进度显示",
+					},
+					"prompt": map[string]any{
+						"type":        "string",
+						"description": "详细指令，告诉子代理具体要做什么",
+					},
+					"subagent_type": map[string]any{
+						"type":        "string",
+						"enum":        []string{"explore", "code", "plan"},
+						"description": "子代理类型",
+					},
+				},
+				Required: []string{"description", "prompt", "subagent_type"},
+			},
+		},
 	}
+
 	for _, t := range tools {
 		TOOLS = append(TOOLS, anthropic.ToolUnionParam{OfTool: &t})
 	}
@@ -143,5 +212,6 @@ Rules:
 - Never invent file paths. Use bash ls/find first if unsure.
 - Make minimal changes. Don't over-engineer.
 - Use todo_writer for multi-step tasks.
+- Use Task tool to delegate complex subtasks to specialized subagents.
 - After finishing, summarize what changed.`, cwd)}}
 }
