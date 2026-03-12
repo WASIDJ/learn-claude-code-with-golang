@@ -65,7 +65,7 @@ func parseSkillMD(path string) (Skill, error) {
 		return Skill{}, fmt.Errorf("failed to read file: %w", err)
 	}
 
-	re := regexp.MustCompile(`^---\s*\n(.*?)\n---\s*\n(.*)$`)
+	re := regexp.MustCompile(`(?s)^---\s*\n(.*?)\n---\s*\n(.*)$`)
 	matches := re.FindStringSubmatch(string(content))
 
 	if len(matches) < 3 {

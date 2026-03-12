@@ -42,7 +42,7 @@ func init() {
 	}
 
 	// 初始化技能加载器
-	skillsDir := filepath.Join(WORKDIR, "skills")
+	skillsDir := filepath.Join(WORKDIR, ".skills")
 	SKILLS, err = NewSkillLoader(skillsDir)
 	if err != nil {
 		// 技能加载失败只输出警告，不中断程序
