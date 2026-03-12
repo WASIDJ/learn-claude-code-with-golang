@@ -1,6 +1,10 @@
 "use client";
 
 import Link from "next/link";
+<<<<<<< HEAD
+=======
+import { motion } from "framer-motion";
+>>>>>>> upstream/main
 import { useTranslations, useLocale } from "@/lib/i18n";
 import { LEARNING_PATH, VERSION_META, LAYERS } from "@/lib/constants";
 import { LayerBadge } from "@/components/ui/badge";
@@ -86,7 +90,11 @@ export function Timeline() {
                   )}
                 >
                   <span className="text-[10px] font-bold text-white sm:text-xs">
+<<<<<<< HEAD
                     {versionId.replace("v", "").replace("_mini", "m")}
+=======
+                    {versionId.replace("s", "").replace("_mini", "m")}
+>>>>>>> upstream/main
                   </span>
                 </div>
                 {!isLast && (
@@ -103,7 +111,17 @@ export function Timeline() {
 
               {/* Content card */}
               <div className="flex-1 pb-2">
+<<<<<<< HEAD
                 <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-4 transition-colors hover:border-[var(--color-text-secondary)]/30 sm:p-5">
+=======
+                <motion.div
+                  initial={{ opacity: 0, x: 30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ duration: 0.4, delay: 0.1 }}
+                  className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-4 transition-colors hover:border-[var(--color-text-secondary)]/30 sm:p-5"
+                >
+>>>>>>> upstream/main
                   <div className="flex flex-wrap items-start gap-2">
                     <LayerBadge layer={meta.layer}>{versionId}</LayerBadge>
                     <span className="text-xs text-[var(--color-text-secondary)]">
@@ -154,7 +172,11 @@ export function Timeline() {
                     {t("learn_more")}
                     <span aria-hidden="true">&rarr;</span>
                   </Link>
+<<<<<<< HEAD
                 </div>
+=======
+                </motion.div>
+>>>>>>> upstream/main
               </div>
             </div>
           );
@@ -182,17 +204,32 @@ export function Timeline() {
                 </span>
                 <div className="flex-1">
                   <div className="h-5 w-full overflow-hidden rounded bg-zinc-100 dark:bg-zinc-800">
+<<<<<<< HEAD
                     <div
+=======
+                    <motion.div
+                      initial={{ width: 0 }}
+                      whileInView={{ width: `${widthPercent}%` }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.6, delay: 0.05 * LEARNING_PATH.indexOf(versionId) }}
+>>>>>>> upstream/main
                       className={cn(
                         "flex h-full items-center rounded px-2",
                         LAYER_BAR_BG[meta.layer]
                       )}
+<<<<<<< HEAD
                       style={{ width: `${widthPercent}%` }}
+=======
+>>>>>>> upstream/main
                     >
                       <span className="text-[10px] font-medium text-white">
                         {data.loc}
                       </span>
+<<<<<<< HEAD
                     </div>
+=======
+                    </motion.div>
+>>>>>>> upstream/main
                   </div>
                 </div>
               </div>

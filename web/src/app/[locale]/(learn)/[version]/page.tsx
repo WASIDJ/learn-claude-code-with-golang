@@ -3,6 +3,10 @@ import { LEARNING_PATH, VERSION_META, LAYERS } from "@/lib/constants";
 import { LayerBadge } from "@/components/ui/badge";
 import versionsData from "@/data/generated/versions.json";
 import { VersionDetailClient } from "./client";
+<<<<<<< HEAD
+=======
+import { getTranslations } from "@/lib/i18n-server";
+>>>>>>> upstream/main
 
 export function generateStaticParams() {
   return LEARNING_PATH.map((version) => ({ version }));
@@ -28,6 +32,12 @@ export default async function VersionPage({
     );
   }
 
+<<<<<<< HEAD
+=======
+  const t = getTranslations(locale, "version");
+  const tSession = getTranslations(locale, "sessions");
+  const tLayer = getTranslations(locale, "layer_labels");
+>>>>>>> upstream/main
   const layer = LAYERS.find((l) => l.id === meta.layer);
 
   const pathIndex = LEARNING_PATH.indexOf(version as typeof LEARNING_PATH[number]);
@@ -45,9 +55,15 @@ export default async function VersionPage({
           <span className="rounded-lg bg-zinc-100 px-3 py-1 font-mono text-lg font-bold dark:bg-zinc-800">
             {version}
           </span>
+<<<<<<< HEAD
           <h1 className="text-2xl font-bold sm:text-3xl">{meta.title}</h1>
           {layer && (
             <LayerBadge layer={meta.layer}>{layer.label}</LayerBadge>
+=======
+          <h1 className="text-2xl font-bold sm:text-3xl">{tSession(version) || meta.title}</h1>
+          {layer && (
+            <LayerBadge layer={meta.layer}>{tLayer(layer.id)}</LayerBadge>
+>>>>>>> upstream/main
           )}
         </div>
         <p className="text-lg text-zinc-500 dark:text-zinc-400">
@@ -55,7 +71,11 @@ export default async function VersionPage({
         </p>
         <div className="flex flex-wrap items-center gap-4 text-sm text-zinc-500 dark:text-zinc-400">
           <span className="font-mono">{versionData.loc} LOC</span>
+<<<<<<< HEAD
           <span>{versionData.tools.length} tools</span>
+=======
+          <span>{versionData.tools.length} {t("tools")}</span>
+>>>>>>> upstream/main
           {meta.coreAddition && (
             <span className="rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs dark:bg-zinc-800">
               {meta.coreAddition}
@@ -88,9 +108,15 @@ export default async function VersionPage({
               &larr;
             </span>
             <div>
+<<<<<<< HEAD
               <div className="text-xs text-zinc-400">Previous</div>
               <div className="font-medium">
                 {prevVersion} - {VERSION_META[prevVersion]?.title}
+=======
+              <div className="text-xs text-zinc-400">{t("prev")}</div>
+              <div className="font-medium">
+                {prevVersion} - {tSession(prevVersion) || VERSION_META[prevVersion]?.title}
+>>>>>>> upstream/main
               </div>
             </div>
           </Link>
@@ -103,9 +129,15 @@ export default async function VersionPage({
             className="group flex items-center gap-2 text-right text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-white"
           >
             <div>
+<<<<<<< HEAD
               <div className="text-xs text-zinc-400">Next</div>
               <div className="font-medium">
                 {nextVersion} - {VERSION_META[nextVersion]?.title}
+=======
+              <div className="text-xs text-zinc-400">{t("next")}</div>
+              <div className="font-medium">
+                {tSession(nextVersion) || VERSION_META[nextVersion]?.title} - {nextVersion}
+>>>>>>> upstream/main
               </div>
             </div>
             <span className="transition-transform group-hover:translate-x-1">

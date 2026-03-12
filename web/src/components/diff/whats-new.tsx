@@ -17,6 +17,10 @@ interface WhatsNewProps {
 
 export function WhatsNew({ diff }: WhatsNewProps) {
   const t = useTranslations("version");
+<<<<<<< HEAD
+=======
+  const td = useTranslations("diff");
+>>>>>>> upstream/main
 
   if (!diff) {
     return null;
@@ -45,7 +49,11 @@ export function WhatsNew({ diff }: WhatsNewProps) {
           >
             <Card className="h-full">
               <h3 className="mb-2 text-sm font-medium text-zinc-500 dark:text-zinc-400">
+<<<<<<< HEAD
                 New Classes
+=======
+                {td("new_classes")}
+>>>>>>> upstream/main
               </h3>
               <div className="space-y-1.5">
                 {diff.newClasses.map((cls) => (
@@ -69,7 +77,11 @@ export function WhatsNew({ diff }: WhatsNewProps) {
           >
             <Card className="h-full">
               <h3 className="mb-2 text-sm font-medium text-zinc-500 dark:text-zinc-400">
+<<<<<<< HEAD
                 New Tools
+=======
+                {td("new_tools")}
+>>>>>>> upstream/main
               </h3>
               <div className="flex flex-wrap gap-1.5">
                 {diff.newTools.map((tool) => (
@@ -93,7 +105,11 @@ export function WhatsNew({ diff }: WhatsNewProps) {
           >
             <Card className="h-full">
               <h3 className="mb-2 text-sm font-medium text-zinc-500 dark:text-zinc-400">
+<<<<<<< HEAD
                 New Functions
+=======
+                {td("new_functions")}
+>>>>>>> upstream/main
               </h3>
               <ul className="space-y-1 text-sm text-zinc-700 dark:text-zinc-300">
                 {diff.newFunctions.map((fn) => (
@@ -118,7 +134,11 @@ export function WhatsNew({ diff }: WhatsNewProps) {
             <Card className="flex h-full items-center">
               <div>
                 <h3 className="mb-1 text-sm font-medium text-zinc-500 dark:text-zinc-400">
+<<<<<<< HEAD
                   LOC Delta
+=======
+                  {td("loc_delta")}
+>>>>>>> upstream/main
                 </h3>
                 <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
                   +{diff.locDelta} lines

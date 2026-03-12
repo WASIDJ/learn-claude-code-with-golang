@@ -218,5 +218,15 @@ __marimo__/
 web/node_modules/
 web/.next/
 web/out/
+<<<<<<< HEAD
 agentWithGo/bin/*
 .envrc
+=======
+.vercel
+.env*.local
+test_providers.py
+
+# Internal analysis artifacts (not learning material)
+analysis/
+analysis_progress.md
+>>>>>>> upstream/main

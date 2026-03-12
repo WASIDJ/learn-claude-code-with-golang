@@ -7,6 +7,10 @@ import { LayerBadge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import versionsData from "@/data/generated/versions.json";
+<<<<<<< HEAD
+=======
+import { MessageFlow } from "@/components/architecture/message-flow";
+>>>>>>> upstream/main
 
 const LAYER_DOT_COLORS: Record<string, string> = {
   tools: "bg-blue-500",
@@ -124,6 +128,22 @@ export default function HomePage() {
         </div>
       </section>
 
+<<<<<<< HEAD
+=======
+      {/* Message Flow Visualization */}
+      <section>
+        <div className="mb-6 text-center">
+          <h2 className="text-2xl font-bold sm:text-3xl">{t("message_flow")}</h2>
+          <p className="mt-2 text-[var(--color-text-secondary)]">
+            {t("message_flow_desc")}
+          </p>
+        </div>
+        <div className="mx-auto max-w-2xl">
+          <MessageFlow />
+        </div>
+      </section>
+
+>>>>>>> upstream/main
       {/* Learning Path Preview */}
       <section>
         <div className="mb-6 text-center">

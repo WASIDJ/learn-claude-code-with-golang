@@ -7,7 +7,10 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { LayerBadge } from "@/components/ui/badge";
 import { CodeDiff } from "@/components/diff/code-diff";
 import { ArchDiagram } from "@/components/architecture/arch-diagram";
+<<<<<<< HEAD
 import { cn } from "@/lib/utils";
+=======
+>>>>>>> upstream/main
 import { ArrowRight, FileCode, Wrench, Box, FunctionSquare } from "lucide-react";
 import type { VersionIndex } from "@/types/agent-data";
 import versionData from "@/data/generated/versions.json";
@@ -130,7 +133,11 @@ export default function ComparePage() {
 
           {/* Side-by-side Architecture Diagrams */}
           <div>
+<<<<<<< HEAD
             <h2 className="mb-4 text-xl font-semibold">Architecture</h2>
+=======
+            <h2 className="mb-4 text-xl font-semibold">{t("architecture")}</h2>
+>>>>>>> upstream/main
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
               <div>
                 <h3 className="mb-3 text-sm font-medium text-zinc-500 dark:text-zinc-400">
@@ -153,14 +160,22 @@ export default function ComparePage() {
               <CardHeader>
                 <div className="flex items-center gap-2 text-zinc-500 dark:text-zinc-400">
                   <FileCode size={16} />
+<<<<<<< HEAD
                   <span className="text-sm">LOC Delta</span>
+=======
+                  <span className="text-sm">{t("loc_delta")}</span>
+>>>>>>> upstream/main
                 </div>
               </CardHeader>
               <CardTitle>
                 <span className={comparison.locDelta >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}>
                   {comparison.locDelta >= 0 ? "+" : ""}{comparison.locDelta}
                 </span>
+<<<<<<< HEAD
                 <span className="ml-2 text-sm font-normal text-zinc-500">lines</span>
+=======
+                <span className="ml-2 text-sm font-normal text-zinc-500">{t("lines")}</span>
+>>>>>>> upstream/main
               </CardTitle>
             </Card>
 
@@ -168,7 +183,11 @@ export default function ComparePage() {
               <CardHeader>
                 <div className="flex items-center gap-2 text-zinc-500 dark:text-zinc-400">
                   <Wrench size={16} />
+<<<<<<< HEAD
                   <span className="text-sm">New Tools in B</span>
+=======
+                  <span className="text-sm">{t("new_tools_in_b")}</span>
+>>>>>>> upstream/main
                 </div>
               </CardHeader>
               <CardTitle>
@@ -189,7 +208,11 @@ export default function ComparePage() {
               <CardHeader>
                 <div className="flex items-center gap-2 text-zinc-500 dark:text-zinc-400">
                   <Box size={16} />
+<<<<<<< HEAD
                   <span className="text-sm">New Classes in B</span>
+=======
+                  <span className="text-sm">{t("new_classes_in_b")}</span>
+>>>>>>> upstream/main
                 </div>
               </CardHeader>
               <CardTitle>
@@ -210,7 +233,11 @@ export default function ComparePage() {
               <CardHeader>
                 <div className="flex items-center gap-2 text-zinc-500 dark:text-zinc-400">
                   <FunctionSquare size={16} />
+<<<<<<< HEAD
                   <span className="text-sm">New Functions in B</span>
+=======
+                  <span className="text-sm">{t("new_functions_in_b")}</span>
+>>>>>>> upstream/main
                 </div>
               </CardHeader>
               <CardTitle>
@@ -231,15 +258,26 @@ export default function ComparePage() {
           {/* Tool comparison */}
           <Card>
             <CardHeader>
+<<<<<<< HEAD
               <CardTitle>Tool Comparison</CardTitle>
+=======
+              <CardTitle>{t("tool_comparison")}</CardTitle>
+>>>>>>> upstream/main
             </CardHeader>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
               <div>
                 <h4 className="mb-2 text-sm font-medium text-zinc-600 dark:text-zinc-400">
+<<<<<<< HEAD
                   Only in {metaA?.title || versionA}
                 </h4>
                 {comparison.toolsOnlyA.length === 0 ? (
                   <p className="text-xs text-zinc-400">None</p>
+=======
+                  {t("only_in")} {metaA?.title || versionA}
+                </h4>
+                {comparison.toolsOnlyA.length === 0 ? (
+                  <p className="text-xs text-zinc-400">{t("none")}</p>
+>>>>>>> upstream/main
                 ) : (
                   <div className="flex flex-wrap gap-1">
                     {comparison.toolsOnlyA.map((tool) => (
@@ -252,10 +290,17 @@ export default function ComparePage() {
               </div>
               <div>
                 <h4 className="mb-2 text-sm font-medium text-zinc-600 dark:text-zinc-400">
+<<<<<<< HEAD
                   Shared
                 </h4>
                 {comparison.toolsShared.length === 0 ? (
                   <p className="text-xs text-zinc-400">None</p>
+=======
+                  {t("shared")}
+                </h4>
+                {comparison.toolsShared.length === 0 ? (
+                  <p className="text-xs text-zinc-400">{t("none")}</p>
+>>>>>>> upstream/main
                 ) : (
                   <div className="flex flex-wrap gap-1">
                     {comparison.toolsShared.map((tool) => (
@@ -268,10 +313,17 @@ export default function ComparePage() {
               </div>
               <div>
                 <h4 className="mb-2 text-sm font-medium text-zinc-600 dark:text-zinc-400">
+<<<<<<< HEAD
                   Only in {metaB?.title || versionB}
                 </h4>
                 {comparison.toolsOnlyB.length === 0 ? (
                   <p className="text-xs text-zinc-400">None</p>
+=======
+                  {t("only_in")} {metaB?.title || versionB}
+                </h4>
+                {comparison.toolsOnlyB.length === 0 ? (
+                  <p className="text-xs text-zinc-400">{t("none")}</p>
+>>>>>>> upstream/main
                 ) : (
                   <div className="flex flex-wrap gap-1">
                     {comparison.toolsOnlyB.map((tool) => (
@@ -287,7 +339,11 @@ export default function ComparePage() {
 
           {/* Code Diff */}
           <div>
+<<<<<<< HEAD
             <h2 className="mb-4 text-xl font-semibold">Source Code Diff</h2>
+=======
+            <h2 className="mb-4 text-xl font-semibold">{t("source_diff")}</h2>
+>>>>>>> upstream/main
             <CodeDiff
               oldSource={infoA.source}
               newSource={infoB.source}
@@ -301,7 +357,11 @@ export default function ComparePage() {
       {/* Empty state */}
       {(!versionA || !versionB) && (
         <div className="rounded-lg border border-dashed border-zinc-300 p-12 text-center dark:border-zinc-700">
+<<<<<<< HEAD
           <p className="text-zinc-400">Select two versions above to compare them.</p>
+=======
+          <p className="text-zinc-400">{t("empty_hint")}</p>
+>>>>>>> upstream/main
         </div>
       )}
     </div>

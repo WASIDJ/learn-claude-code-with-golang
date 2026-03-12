@@ -3,6 +3,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LAYERS, VERSION_META } from "@/lib/constants";
+<<<<<<< HEAD
+=======
+import { useTranslations } from "@/lib/i18n";
+>>>>>>> upstream/main
 import { cn } from "@/lib/utils";
 
 const LAYER_DOT_BG: Record<string, string> = {
@@ -16,6 +20,11 @@ const LAYER_DOT_BG: Record<string, string> = {
 export function Sidebar() {
   const pathname = usePathname();
   const locale = pathname.split("/")[1] || "en";
+<<<<<<< HEAD
+=======
+  const t = useTranslations("sessions");
+  const tLayer = useTranslations("layer_labels");
+>>>>>>> upstream/main
 
   return (
     <nav className="hidden w-56 shrink-0 md:block">
@@ -25,7 +34,11 @@ export function Sidebar() {
             <div className="flex items-center gap-1.5 pb-1.5">
               <span className={cn("h-2 w-2 rounded-full", LAYER_DOT_BG[layer.id])} />
               <span className="text-[11px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+<<<<<<< HEAD
                 {layer.label}
+=======
+                {tLayer(layer.id)}
+>>>>>>> upstream/main
               </span>
             </div>
             <ul className="space-y-0.5">
@@ -49,7 +62,11 @@ export function Sidebar() {
                       )}
                     >
                       <span className="font-mono text-xs">{vId}</span>
+<<<<<<< HEAD
                       <span className="ml-1.5">{meta?.title}</span>
+=======
+                      <span className="ml-1.5">{t(vId) || meta?.title}</span>
+>>>>>>> upstream/main
                     </Link>
                   </li>
                 );

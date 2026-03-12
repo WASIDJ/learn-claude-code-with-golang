@@ -16,6 +16,7 @@ const DOCS_DIR = path.join(REPO_ROOT, "docs");
 const OUT_DIR = path.join(WEB_DIR, "src", "data", "generated");
 
 // Map python filenames to version IDs
+<<<<<<< HEAD
 // v0_bash_agent_mini.py -> v0_mini
 // v0_bash_agent.py -> v0
 // v8a_team_foundation.py -> v8a
@@ -25,6 +26,17 @@ function filenameToVersionId(filename: string): string | null {
   if (base === "v0_bash_agent_mini") return "v0_mini";
 
   const match = base.match(/^(v\d+[a-c]?)_/);
+=======
+// s01_agent_loop.py -> s01
+// s02_tools.py -> s02
+// s_full.py -> s_full (reference agent, typically skipped)
+function filenameToVersionId(filename: string): string | null {
+  const base = path.basename(filename, ".py");
+  if (base === "s_full") return null;
+  if (base === "__init__") return null;
+
+  const match = base.match(/^(s\d+[a-c]?)_/);
+>>>>>>> upstream/main
   if (!match) return null;
   return match[1];
 }
@@ -99,6 +111,7 @@ function countLoc(lines: string[]): number {
   }).length;
 }
 
+<<<<<<< HEAD
 // Detect locale from doc filename
 function detectLocale(filename: string): "en" | "zh" | "ja" {
   // Strip the version prefix (e.g., "v0-")
@@ -116,6 +129,21 @@ function detectLocale(filename: string): "en" | "zh" | "ja" {
 // Extract version from doc filename (e.g., "v0-bash-is-all-you-need.md" -> "v0")
 function extractDocVersion(filename: string): string | null {
   const m = filename.match(/^(v\d+[a-c]?)-/);
+=======
+// Detect locale from subdirectory path
+// docs/en/s01-the-agent-loop.md -> "en"
+// docs/zh/s01-the-agent-loop.md -> "zh"
+// docs/ja/s01-the-agent-loop.md -> "ja"
+function detectLocale(relPath: string): "en" | "zh" | "ja" {
+  if (relPath.startsWith("zh/") || relPath.startsWith("zh\\")) return "zh";
+  if (relPath.startsWith("ja/") || relPath.startsWith("ja\\")) return "ja";
+  return "en";
+}
+
+// Extract version from doc filename (e.g., "s01-the-agent-loop.md" -> "s01")
+function extractDocVersion(filename: string): string | null {
+  const m = filename.match(/^(s\d+[a-c]?)-/);
+>>>>>>> upstream/main
   return m ? m[1] : null;
 }
 
@@ -137,7 +165,11 @@ function main() {
   // 1. Read all agent files
   const agentFiles = fs
     .readdirSync(AGENTS_DIR)
+<<<<<<< HEAD
     .filter((f) => f.startsWith("v") && f.endsWith(".py"));
+=======
+    .filter((f) => f.startsWith("s") && f.endsWith(".py"));
+>>>>>>> upstream/main
 
   console.log(`  Found ${agentFiles.length} agent files`);
 
@@ -219,6 +251,7 @@ function main() {
     });
   }
 
+<<<<<<< HEAD
   // 4. Read doc files
   const docs: DocContent[] = [];
 
@@ -246,6 +279,43 @@ function main() {
 
       docs.push({ version, locale, title, content });
     }
+=======
+  // 4. Read doc files from locale subdirectories (en/, zh/, ja/)
+  const docs: DocContent[] = [];
+
+  if (fs.existsSync(DOCS_DIR)) {
+    const localeDirs = ["en", "zh", "ja"];
+    let totalDocFiles = 0;
+
+    for (const locale of localeDirs) {
+      const localeDir = path.join(DOCS_DIR, locale);
+      if (!fs.existsSync(localeDir)) continue;
+
+      const docFiles = fs
+        .readdirSync(localeDir)
+        .filter((f) => f.endsWith(".md"));
+
+      totalDocFiles += docFiles.length;
+
+      for (const filename of docFiles) {
+        const version = extractDocVersion(filename);
+        if (!version) {
+          console.warn(`  Skipping doc ${locale}/${filename}: could not determine version`);
+          continue;
+        }
+
+        const filePath = path.join(localeDir, filename);
+        const content = fs.readFileSync(filePath, "utf-8");
+
+        const titleMatch = content.match(/^#\s+(.+)$/m);
+        const title = titleMatch ? titleMatch[1] : filename;
+
+        docs.push({ version, locale: locale as "en" | "zh" | "ja", title, content });
+      }
+    }
+
+    console.log(`  Found ${totalDocFiles} doc files across ${localeDirs.length} locales`);
+>>>>>>> upstream/main
   } else {
     console.warn(`  Docs directory not found: ${DOCS_DIR}`);
   }
