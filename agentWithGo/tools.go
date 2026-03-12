@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -30,11 +31,22 @@ type TodoWriteInput struct {
 // WORKDIR 工作目录
 var WORKDIR string
 
+// SKILLS 技能加载器
+var SKILLS *SkillLoader
+
 func init() {
 	var err error
 	WORKDIR, err = os.Getwd()
 	if err != nil {
 		panic(err)
+	}
+
+	// 初始化技能加载器
+	skillsDir := filepath.Join(WORKDIR, "skills")
+	SKILLS, err = NewSkillLoader(skillsDir)
+	if err != nil {
+		// 技能加载失败只输出警告，不中断程序
+		fmt.Fprintf(os.Stderr, "Warning: Failed to load skills: %v\n", err)
 	}
 }
 
@@ -53,6 +65,8 @@ func ExecuteTool(toolName string, inputJSON string) string {
 		return executeTodoWriter(inputJSON)
 	case "Task":
 		return executeTask(inputJSON)
+	case "Skill":
+		return executeSkill(inputJSON)
 	default:
 		return fmt.Sprintf("未知工具: %s", toolName)
 	}
@@ -308,4 +322,41 @@ func renderTodos(items []TodoItem) string {
 
 	output.WriteString(fmt.Sprintf("\n(%d/%d completed)\n", completedCount, len(items)))
 	return output.String()
+}
+
+// executeSkill 执行技能调用
+func executeSkill(inputJSON string) string {
+	var input struct {
+		Skill string `json:"skill"`
+	}
+	if err := json.Unmarshal([]byte(inputJSON), &input); err != nil {
+		return fmt.Sprintf("解析输入失败: %v", err)
+	}
+
+	result, err := runSkill(input.Skill)
+	if err != nil {
+		return fmt.Sprintf("Error: %v", err)
+	}
+	return result
+}
+
+// runSkill 加载并运行技能
+// 完整内容作为 tool_result 返回
+// 它会成为对话历史的一部分（user message）
+func runSkill(skillName string) (string, error) {
+	if SKILLS == nil {
+		return "", errors.New("skills not initialized")
+	}
+
+	content, err := SKILLS.GetSkillContent(skillName)
+	if err != nil {
+		return "", fmt.Errorf("load skill '%s': %w", skillName, err)
+	}
+
+	result := fmt.Sprintf(`<skill-loaded name="%s">
+%s
+</skill-loaded>
+
+Follow the instructions in the skill above.`, skillName, content)
+	return result, nil
 }

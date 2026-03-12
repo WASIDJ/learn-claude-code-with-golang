@@ -191,6 +191,26 @@ func init() {
 				Required: []string{"description", "prompt", "subagent_type"},
 			},
 		},
+		{
+			Name: "Skill",
+			Description: anthropic.String(`加载技能获取专业知识。
+
+可用技能：
+- pdf: 处理 PDF 文件
+- mcp-builder: 构建 MCP 服务器
+- code-review: 代码审查
+
+当任务匹配技能描述时，立即调用此工具。`),
+			InputSchema: anthropic.ToolInputSchemaParam{
+				Type: "object",
+				Properties: map[string]any{
+					"skill": map[string]any{
+						"type": "string",
+					},
+				},
+				Required: []string{"skill"},
+			},
+		},
 	}
 
 	for _, t := range tools {
